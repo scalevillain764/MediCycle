@@ -141,7 +141,7 @@ const getElement = object => {
   return null;
 };
 const isVisible = element => {
-  if (!isElement(element) || element.getClientRects().length === 0) {
+  if (!isElement(element) || element.getUserRects().length === 0) {
     return false;
   }
   const elementIsVisible = getComputedStyle(element).getPropertyValue('visibility') === 'visible';
@@ -1023,22 +1023,22 @@ class Swipe extends Config {
   // Private
   _start(event) {
     if (!this._supportPointerEvents) {
-      this._deltaX = event.touches[0].clientX;
+      this._deltaX = event.touches[0].UserX;
       return;
     }
     if (this._eventIsPointerPenTouch(event)) {
-      this._deltaX = event.clientX;
+      this._deltaX = event.UserX;
     }
   }
   _end(event) {
     if (this._eventIsPointerPenTouch(event)) {
-      this._deltaX = event.clientX - this._deltaX;
+      this._deltaX = event.UserX - this._deltaX;
     }
     this._handleSwipe();
     execute(this._config.endCallback);
   }
   _move(event) {
-    this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].clientX - this._deltaX;
+    this._deltaX = event.touches && event.touches.length > 1 ? 0 : event.touches[0].UserX - this._deltaX;
   }
   _handleSwipe() {
     const absDeltaX = Math.abs(this._deltaX);
@@ -1580,7 +1580,7 @@ class Collapse extends BaseComponent {
       return;
     }
     const dimension = this._getDimension();
-    this._element.style[dimension] = `${this._element.getBoundingClientRect()[dimension]}px`;
+    this._element.style[dimension] = `${this._element.getBoundingUserRect()[dimension]}px`;
     reflow(this._element);
     this._element.classList.add(CLASS_NAME_COLLAPSING);
     this._element.classList.remove(CLASS_NAME_COLLAPSE, CLASS_NAME_SHOW$7);
@@ -1850,9 +1850,9 @@ class Dropdown extends BaseComponent {
   }
   _getConfig(config) {
     config = super._getConfig(config);
-    if (typeof config.reference === 'object' && !isElement(config.reference) && typeof config.reference.getBoundingClientRect !== 'function') {
-      // Popper virtual elements require a getBoundingClientRect method
-      throw new TypeError(`${NAME$a.toUpperCase()}: Option "reference" provided type "object" without a required "getBoundingClientRect" method.`);
+    if (typeof config.reference === 'object' && !isElement(config.reference) && typeof config.reference.getBoundingUserRect !== 'function') {
+      // Popper virtual elements require a getBoundingUserRect method
+      throw new TypeError(`${NAME$a.toUpperCase()}: Option "reference" provided type "object" without a required "getBoundingUserRect" method.`);
     }
     return config;
   }
@@ -2299,7 +2299,7 @@ class ScrollBarHelper {
   // Public
   getWidth() {
     // https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth#usage_notes
-    const documentWidth = document.documentElement.clientWidth;
+    const documentWidth = document.documentElement.UserWidth;
     return Math.abs(window.innerWidth - documentWidth);
   }
   hide() {
@@ -2329,7 +2329,7 @@ class ScrollBarHelper {
   _setElementAttributes(selector, styleProperty, callback) {
     const scrollbarWidth = this.getWidth();
     const manipulationCallBack = element => {
-      if (element !== this._element && window.innerWidth > element.clientWidth + scrollbarWidth) {
+      if (element !== this._element && window.innerWidth > element.UserWidth + scrollbarWidth) {
         return;
       }
       this._saveInitialAttribute(element, styleProperty);
@@ -2580,7 +2580,7 @@ class Modal extends BaseComponent {
     if (hideEvent.defaultPrevented) {
       return;
     }
-    const isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight;
+    const isModalOverflowing = this._element.scrollHeight > document.documentElement.UserHeight;
     const initialOverflowY = this._element.style.overflowY;
     // return if the following background transition hasn't yet completed
     if (initialOverflowY === 'hidden' || this._element.classList.contains(CLASS_NAME_STATIC)) {
@@ -2604,7 +2604,7 @@ class Modal extends BaseComponent {
    */
 
   _adjustDialog() {
-    const isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight;
+    const isModalOverflowing = this._element.scrollHeight > document.documentElement.UserHeight;
     const scrollbarWidth = this._scrollBar.getWidth();
     const isBodyOverflowing = scrollbarWidth > 0;
     if (isBodyOverflowing && !isModalOverflowing) {

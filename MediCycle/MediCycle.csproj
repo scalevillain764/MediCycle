@@ -6,4 +6,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\" />
+    <Folder Include="Infrastructure\" />
+    <Folder Include="Presentation\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ulid" Version="1.4.1" />
+  </ItemGroup>
+
 </Project>
