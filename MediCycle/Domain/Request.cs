@@ -7,7 +7,7 @@
         public Client? Client { get; private set; } = null!;
 
         public Ulid AddressId { get; private set; }
-        public Address RequestAddress {get; private set;} // 1 : N
+        public Address RequestAddress { get; set; } = null!; // 1 : N
 
         public Ulid? ExecutorId { get; set; }
         public Worker? Executor { get; set; } = null;
