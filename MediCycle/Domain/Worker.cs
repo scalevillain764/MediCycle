@@ -9,14 +9,13 @@ namespace Domain
         public WorkerRole Role { get; set; }
         public string? DriverLicenseNumber { get; set; }
         public ICollection<Request> Requests { get; set; } = [];
-        public Worker(string name, string surname, DateTime birthday, string passwordHash, 
-            string refreshTokenHash, DateTime refreshTokenExpiresAt, WorkerRole role,
-            string? driverLicenseNumber) : base(passwordHash, refreshTokenHash, refreshTokenExpiresAt)
+        public Worker(string login, string passwordHash, string name, string surname,
+            DateTime birthday, WorkerRole role, string? driverLicense) : base(login, passwordHash)
         {
             Name = name;
             Surname = surname;
             Role = role;
-            DriverLicenseNumber = driverLicenseNumber;
+            DriverLicenseNumber = driverLicense;
         }
     }
 }
