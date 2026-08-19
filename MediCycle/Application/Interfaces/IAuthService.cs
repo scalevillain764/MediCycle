@@ -6,8 +6,9 @@ namespace Application.Interfaces
 {
     public interface IAuthService
     {
-        public Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateWorkerAsync(AuthWorkerRegistrationDTO DTO, CancellationToken token);
-        public Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateClientAsync(AuthClientRegistrationDTO DTO, CancellationToken token);
-        public Task<AuthLoginResponse> LogInAsync(AuthLoginDTO DTO, CancellationToken token);
+        Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateWorkerAsync(AuthWorkerRegistrationDTO DTO, CancellationToken token);
+        Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateClientAsync(AuthClientRegistrationDTO DTO, CancellationToken token);
+        Task<Result<AuthLoginResponse>> LogInAsync(AuthLoginDTOandRegistrationResponse DTO, CancellationToken token);
+        Task<Result<AuthLoginResponse>> RefreshAsync(Ulid userId, CancellationToken token);
     }
 }

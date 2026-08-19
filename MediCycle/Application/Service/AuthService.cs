@@ -1,25 +1,67 @@
 ﻿using Application.DTO.AuthDTO;
 using Application.DTO.AuthDTO.Client;
 using Application.DTO.AuthDTO.Worker;
-
 using Application.Interfaces;
-using Infrastructure.Result;
+using Domain;
+using Domain.Enums;
 using Infrastructure;
-using Error = Domain.Enums.ErrorType;
+using Infrastructure.Result;
 using Microsoft.EntityFrameworkCore;
-
-using Worker = Domain.Worker;
 using Client = Domain.Client;
+using Error = Domain.Enums.ErrorType;
+using ITokenService = Application.Interfaces.ITokenService;
+using Worker = Domain.Worker;
 
 namespace Application.Services
 {
     public class AuthService : IAuthService
     {
         private readonly AppDbContext _context;
-        public AuthService(AppDbContext context)
+        private readonly ITokenService _tokenService;
+        private readonly IHttpContextAccessor _httpAccessor;
+
+        public AuthService(AppDbContext context, ITokenService tokenService, IHttpContextAccessor httpAccessor)
         {
             _context = context;
+            _tokenService = tokenService;
+            _httpAccessor = httpAccessor;
         }
+
+        private string AppendCookiesAndGetAccessToken(User user)
+        {
+            string userType = user switch
+            {
+                Worker => "Worker",
+                Client => "Client",
+                _ => throw new InvalidDataException("Такого типа нет")
+            };
+
+            string? userRole = null;
+
+            if (user is Worker worker)
+                userRole = worker.Role.ToString();
+
+            string accessToken = _tokenService.CreateAccessToken(user.Id, user.Login, userType, userRole);
+            string refreshToken = _tokenService.CreateRefreshToken();
+
+            string refreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);
+
+            user.RefreshTokenHash = refreshTokenHash;
+            user.RefreshTokenExpiresAt = DateTime.UtcNow.AddDays(7);
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7),
+                SameSite = SameSiteMode.Strict,
+                Secure = true
+            };
+
+            _httpAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+
+            return accessToken;
+        }
+
         private Worker CreateWorker(AuthWorkerRegistrationDTO DTO, string hashedPassword) 
             => new Worker(DTO.login, hashedPassword, DTO.name, DTO.surname, DTO.birthday, DTO.role, DTO.driverLicenseNumber);
 
@@ -50,11 +92,47 @@ namespace Application.Services
             => RegistrateAsync(DTO, CreateWorker, token);
 
         public Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateClientAsync(AuthClientRegistrationDTO DTO, CancellationToken token)
-     => RegistrateAsync(DTO, CreateClient, token);
+            => RegistrateAsync(DTO, CreateClient, token);
 
-        public Task<AuthLoginResponse> LogInAsync(AuthLoginDTOandRegistrationResponse DTO, CancellationToken token)
+        public async Task<Result<AuthLoginResponse>> LogInAsync(AuthLoginDTOandRegistrationResponse DTO, CancellationToken token)
         {
+            var user = await _context.AllUsers
+                .FirstOrDefaultAsync(x => x.Login == DTO.login, token);
 
+            if (user == null)
+                return Result<AuthLoginResponse>.Error("Пользователь не найден, провертье логин", Error.NotFound);
+
+            if (!BCrypt.Net.BCrypt.EnhancedVerify(user.PasswordHash, DTO.password))
+                return Result<AuthLoginResponse>.Error("Невепрный пароль", Error.Validation);
+
+            string accessToken = AppendCookiesAndGetAccessToken(user);
+
+            return Result<AuthLoginResponse>.Success(new AuthLoginResponse(user.Id, accessToken));
+        }
+
+        public async Task<Result<AuthLoginResponse>> RefreshAsync(Ulid userId, CancellationToken token)
+        {
+            string? existingRefreshToken = _httpAccessor.HttpContext?.Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(existingRefreshToken))
+                return Result<AuthLoginResponse>.Error("Куки пусты", ErrorType.Unauthorized);
+
+            var user = await _context.AllUsers
+                .FirstOrDefaultAsync(x => x.Id == userId, token);
+
+            if (user == null)
+                return Result<AuthLoginResponse>.Error("Пользователь не найден", ErrorType.Unauthorized);
+
+            if (user.RefreshTokenExpiresAt == null || user.RefreshTokenExpiresAt < DateTime.UtcNow)
+                return Result<AuthLoginResponse>.Error("Сессия истекла", ErrorType.Unauthorized);
+
+            if (!BCrypt.Net.BCrypt.Verify(existingRefreshToken, user.RefreshTokenHash))
+                return Result<AuthLoginResponse>.Error("Невалидный токен сессии", ErrorType.Unauthorized);
+
+            string AccessToken = AppendCookiesAndGetAccessToken(user);
+
+            await _context.SaveChangesAsync(token);
+            return Result<AuthLoginResponse>.Success(new AuthLoginResponse(user.Id, AccessToken));
         }
     }
 }

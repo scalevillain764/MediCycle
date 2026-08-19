@@ -1,8 +1,10 @@
-﻿namespace Application.Interfaces 
+﻿using Domain;
+
+namespace Application.Interfaces 
 {
     public interface ITokenService
     {
-        public string CreateRefreshToken();
-        public string CreateAccessToken(Ulid Id, string userName);
+        string CreateRefreshToken();
+        string CreateAccessToken(Ulid Id, string name, string userType, string? userRole);
     }
 }
