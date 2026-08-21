@@ -1,4 +1,5 @@
-﻿namespace Domain
+﻿using Status = Domain.Enums.RequestStatus;
+namespace Domain
 {
     public class Request {
         public Ulid Id { get; private set; }
@@ -13,20 +14,24 @@
         public Worker? Executor { get; set; } = null;
 
         public decimal? Weight { get; set; } = null; // kg
+        public Status Status { get; set; }
+        public DateTime CreatedAt { get; private set; }
 
         // preferred time
         public DateTime? PreferredFromTime { get; private set; }
         public DateTime? PreferredToTime { get; private set; }
 
-        public Request(Ulid clientId, Ulid addressId, DateTime? preferredFromTime, DateTime? preferredToTime)
+        public Request(Ulid clientId, Ulid addressId, decimal? weight, DateTime? preferredFromTime, DateTime? preferredToTime)
         {
             Id = Ulid.NewUlid();
             ClientId = clientId;
             AddressId = addressId;
+            Weight = weight;
             ExecutorId = null;
-            Weight = null;
+            CreatedAt = DateTime.UtcNow;
             PreferredFromTime = preferredFromTime;
             PreferredToTime = preferredToTime;
+            Status = Status.Created;
         }
     }
 }

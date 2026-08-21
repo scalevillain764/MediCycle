@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MediCycle.Pages
+namespace Pages
 {
     public class IndexModel : PageModel
     {
