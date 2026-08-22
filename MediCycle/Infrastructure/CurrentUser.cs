@@ -23,5 +23,17 @@ namespace Infrastructure
                         : null;
             }
         }
+
+        public string? UserType
+        {
+            get
+            {
+                var context = _accessor.HttpContext;
+
+                if (context == null) return null;
+
+                return context.User.FindFirstValue(ClaimTypes.Role);
+            }
+        }
     }
 }

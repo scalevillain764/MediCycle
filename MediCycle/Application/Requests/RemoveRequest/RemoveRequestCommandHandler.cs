@@ -17,7 +17,7 @@ namespace Application.Requests.RemoveRequest
         public async Task<Result<string>> Handle(RemoveRequestCommand command, CancellationToken token)
         {
             var request = await _context.Requests
-                .FindAsync(command.RequestId);
+                .FindAsync(command.RequestId, token);
 
             if (request == null)
                 return Result<string>.Error("Заявка не найдена", Error.NotFound);

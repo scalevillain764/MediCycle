@@ -4,10 +4,10 @@ namespace Domain
     public class Request {
         public Ulid Id { get; private set; }
 
-        public Ulid ClientId { get; private set; }
-        public Client? Client { get; private set; } = null!;
+        public Ulid ClientId { get; set; }
+        public Client? Client { get; set; } = null!;
 
-        public Ulid AddressId { get; private set; }
+        public Ulid AddressId { get; set; }
         public Address RequestAddress { get; set; } = null!; // 1 : N
 
         public Ulid? ExecutorId { get; set; }
@@ -18,8 +18,8 @@ namespace Domain
         public DateTime CreatedAt { get; private set; }
 
         // preferred time
-        public DateTime? PreferredFromTime { get; private set; }
-        public DateTime? PreferredToTime { get; private set; }
+        public DateTime? PreferredFromTime { get; set; }
+        public DateTime? PreferredToTime { get; set; }
 
         public Request(Ulid clientId, Ulid addressId, decimal? weight, DateTime? preferredFromTime, DateTime? preferredToTime)
         {
