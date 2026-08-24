@@ -1,7 +1,7 @@
 ﻿using Application.DTO.RequestDTO;
 using Infrastructure.Result;
 using MediatR;
-namespace Application.Requests.EditRequest
+namespace Application.Requests
 {
     public record EditRequestCommand(Ulid RequestId,
         Ulid AddressId,

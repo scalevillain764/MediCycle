@@ -6,7 +6,7 @@ using Error = Domain.Enums.ErrorType;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Domain;
-namespace Application.Requests.GetRequest
+namespace Application.Requests
 {
     public class GetRequestByIdQueryHandler : IRequestHandler<GetRequestByIdQuery, Result<RequestResponse>> // for admin
     {

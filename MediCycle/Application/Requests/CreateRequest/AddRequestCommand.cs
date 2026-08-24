@@ -1,7 +1,7 @@
 ﻿using Application.DTO.RequestDTO;
 using MediatR;
 using Infrastructure.Result;
-namespace Application.Requests.CreateRequest
+namespace Application.Requests
 {
     public record AddRequestCommand(
         Ulid AddressId,

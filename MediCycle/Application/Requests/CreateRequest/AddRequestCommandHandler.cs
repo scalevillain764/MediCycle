@@ -7,7 +7,7 @@ using Error = Domain.Enums.ErrorType;
 using Microsoft.EntityFrameworkCore;
 using AddRequestCommand = Application.Requests.CreateRequest.AddRequestCommand;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
-namespace Application.Requests.CreateRequest
+namespace Application.Requests
 {
     public class CreateRequestCommandHandler : IRequestHandler<AddRequestCommand, Result<RequestResponse>>
     {

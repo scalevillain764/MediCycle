@@ -4,7 +4,7 @@ using Infrastructure.Result;
 using MediatR;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Error = Domain.Enums.ErrorType;
-namespace Application.Requests.EditRequest
+namespace Application.Requests
 {
     public class EditResponseCommandHandler : IRequestHandler<EditRequestCommand, Result<RequestResponse>>
     {
