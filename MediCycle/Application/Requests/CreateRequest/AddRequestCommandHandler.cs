@@ -5,7 +5,6 @@ using MediatR;
 using Request = Domain.Request;
 using Error = Domain.Enums.ErrorType;
 using Microsoft.EntityFrameworkCore;
-using AddRequestCommand = Application.Requests.CreateRequest.AddRequestCommand;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 namespace Application.Requests
 {

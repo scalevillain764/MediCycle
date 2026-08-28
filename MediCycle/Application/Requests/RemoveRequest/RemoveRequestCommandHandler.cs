@@ -15,16 +15,23 @@ namespace Application.Requests.RemoveRequest
             _currentUser = currentUser;
         }
         public async Task<Result<string>> Handle(RemoveRequestCommand command, CancellationToken token)
-        {
+        {  
+            if (_currentUser.UserRole is "Driver")
+                return Result<string>.Error("Вы не можете удалить заявку", Error.Forbidden);
+
             var request = await _context.Requests
                 .FindAsync(command.RequestId, token);
 
             if (request == null)
                 return Result<string>.Error("Заявка не найдена", Error.NotFound);
 
-            if (request.ClientId != _currentUser.UserId)
-                return Result<string>.Error("Это не ваша заявка", Error.Forbidden);
+            if (_currentUser.UserType is "Client")
+            {
+                if (request.ClientId != _currentUser.UserId)
+                    return Result<string>.Error("Это не ваша заявка", Error.Forbidden);
 
+            }
+       
             if (request.Status == Domain.Enums.RequestStatus.InProgress ||
                 request.Status == Domain.Enums.RequestStatus.Completed)
                 return Result<string>.Error("Заявку отменить нельзя. Перезвоните, пожалуйста, водителю", Error.Conflict);

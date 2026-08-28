@@ -1,4 +1,5 @@
 ﻿using Domain;
+using MediatR.NotificationPublishers;
 using System.Security.Claims;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 namespace Infrastructure
@@ -23,16 +24,28 @@ namespace Infrastructure
                         : null;
             }
         }
+        public string? UserRole
+        {
+            get
+            {
+                var context = _accessor.HttpContext;
 
+                if (context == null)
+                    return null;
+
+                return context.User.FindFirstValue(ClaimTypes.Role);
+            }
+        }
         public string? UserType
         {
             get
             {
                 var context = _accessor.HttpContext;
 
-                if (context == null) return null;
+                if (context == null) 
+                    return null;
 
-                return context.User.FindFirstValue(ClaimTypes.Role);
+                return context.User.FindFirstValue("UserType");
             }
         }
     }

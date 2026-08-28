@@ -66,7 +66,7 @@ namespace Application.Services
             => new Worker(DTO.login, hashedPassword, DTO.name, DTO.surname, DTO.birthday, DTO.role, DTO.driverLicenseNumber);
 
         private Client CreateClient(AuthClientRegistrationDTO DTO, string hashedPassword)
-            => new Client(DTO.login, hashedPassword);
+            => new Client(DTO.organization_name, DTO.login, hashedPassword);
 
         private async Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateAsync<TRequest, TEntity>(TRequest DTO, Func<TRequest, string, TEntity> create, CancellationToken token) 
             where TEntity : Domain.User

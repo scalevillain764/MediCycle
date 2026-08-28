@@ -4,5 +4,6 @@
     {
         Ulid? UserId { get; }
         string? UserType { get; }
+        string? UserRole { get; }
     }
 }

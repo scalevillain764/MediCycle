@@ -3,22 +3,31 @@ using Infrastructure.Result;
 using MediatR;
 using Infrastructure;
 using Error = Domain.Enums.ErrorType;
+using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Microsoft.EntityFrameworkCore;
 namespace Application.Requests
 {
     public class GetRequestCardsByClientIdQueryHandler : IRequestHandler<GetRequestCardsByClientIdQuery, Result<List<RequestResponseCard>>>
     {
         private readonly AppDbContext _context;
-        public GetRequestCardsByClientIdQueryHandler(AppDbContext context)
+        private readonly ICurrentUser _currentUser;
+        public GetRequestCardsByClientIdQueryHandler(AppDbContext context, ICurrentUser currentUser)
         {
             _context = context;
+            _currentUser = currentUser;
         }
         public async Task<Result<List<RequestResponseCard>>> Handle(GetRequestCardsByClientIdQuery query, CancellationToken token)
         {
-            if (!await _context.Clients.AnyAsync(x => x.Id == query.ClientId, token))
-                return Result<List<RequestResponseCard>>.Error("Такого пользователя нет", Error.Conflict);
+            if(_currentUser.UserType is "Client")
+            {
+                if (_currentUser.UserId != query.ClientId)
+                    return Result<List<RequestResponseCard>>.Error("Вы не можете посмотреть заявки", Error.Forbidden);
+            }
 
-            var rez = await _context.Requests
+            if (_currentUser.UserRole is "Driver")
+                return Result<List<RequestResponseCard>>.Error("Вы не можете посмотреть заявки", Error.Forbidden);
+ 
+             var rez = await _context.Requests
                 .Where(x => x.ClientId == query.ClientId)
                 .Select(x => new RequestResponseCard(x))
                 .AsNoTracking()

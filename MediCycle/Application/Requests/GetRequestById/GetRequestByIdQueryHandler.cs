@@ -26,9 +26,15 @@ namespace Application.Requests
             if (request == null)
                 return Result<RequestResponse>.Error("Заявка не найдена", Error.NotFound);
 
-            if(_currentUser.UserType == "Client")
+            if(_currentUser.UserType is "Client")
             {
                 if (_currentUser.UserId != request.ClientId)
+                    return Result<RequestResponse>.Error("Это не ваша заявка", Error.Forbidden);
+            }
+
+            if (_currentUser.UserRole is "Driver")
+            {
+                if (request.ExecutorId != _currentUser.UserId)
                     return Result<RequestResponse>.Error("Это не ваша заявка", Error.Forbidden);
             }
 
