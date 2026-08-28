@@ -3,7 +3,7 @@ using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Infrastructure.Result;
 using Infrastructure;
 using Error = Domain.Enums.ErrorType;
-namespace Application.Requests.RemoveRequest
+namespace Application.Requests
 {
     public class RemoveRequestCommandHandler : IRequestHandler<RemoveRequestCommand, Result<string>>
     {
