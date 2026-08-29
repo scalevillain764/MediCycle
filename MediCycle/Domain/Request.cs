@@ -13,6 +13,8 @@ namespace Domain
         public Ulid? ExecutorId { get; set; }
         public Worker? Executor { get; set; } = null;
 
+        public bool MustCall { get; set; }
+        public string? ShortDescription { get; set; }
         public decimal? Weight { get; set; } = null; // kg
         public Status Status { get; set; }
         public DateTime CreatedAt { get; private set; }
@@ -21,11 +23,13 @@ namespace Domain
         public DateTime? PreferredFromTime { get; set; }
         public DateTime? PreferredToTime { get; set; }
 
-        public Request(Ulid clientId, Ulid addressId, decimal? weight, DateTime? preferredFromTime, DateTime? preferredToTime)
+        public Request(Ulid clientId, Ulid addressId, bool mustCall, string? shortDescription, decimal? weight, DateTime? preferredFromTime, DateTime? preferredToTime)
         {
             Id = Ulid.NewUlid();
             ClientId = clientId;
             AddressId = addressId;
+            MustCall = mustCall;
+            ShortDescription = shortDescription;
             Weight = weight;
             ExecutorId = null;
             CreatedAt = DateTime.UtcNow;

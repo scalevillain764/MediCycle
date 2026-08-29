@@ -29,7 +29,7 @@ namespace Application.Requests
             if (address == null)
                 return Result<RequestResponse>.Error("Такой адрес не найден", Error.NotFound);
 
-            var request = new Request((Ulid)_currentUser.UserId, address.Id, command.Weight, command.PreferredFromTime, command.PreferredToTime);
+            var request = new Request((Ulid)_currentUser.UserId, address.Id, command.MustCall, command.ShortDescription, command.Weight, command.PreferredFromTime, command.PreferredToTime);
 
             _context.Requests.Add(request);
 

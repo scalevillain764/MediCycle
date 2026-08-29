@@ -18,7 +18,7 @@
         public ICollection<Request> Requests { get; set; } = [];
 
         public Address (Ulid clientId, string city, string street, string buldingNumber, string presentativeName,
-            string presentativeSurname, string presentativep,  string presentativePhone)
+            string presentativeSurname, string presentativePhone)
         {
             Id = Ulid.NewUlid();
             ClientId = clientId;

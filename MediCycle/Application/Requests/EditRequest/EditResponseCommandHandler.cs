@@ -27,6 +27,8 @@ namespace Application.Requests
                 return Result<RequestResponse>.Error("Это не ваша заявка", Error.Forbidden);
 
             request.AddressId = command.AddressId;
+            request.ShortDescription = command.ShortDescription;
+            request.MustCall = command.MustCall;
             request.Weight = command.Weight;
             request.PreferredFromTime = command.PreferredFromTime;
             request.PreferredToTime = command.PreferredToTime;

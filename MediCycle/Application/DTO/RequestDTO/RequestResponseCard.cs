@@ -12,7 +12,7 @@ namespace Application.DTO.RequestDTO
         public RequestResponseCard(Request request)
             : this(
                   request.Id,
-                  request.Client.OrganizationName,
+                  request.Client?.OrganizationName,
                   request.RequestAddress.City,
                   request.RequestAddress.Street,
                   request.RequestAddress.BuildingNumber,

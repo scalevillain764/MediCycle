@@ -3,6 +3,8 @@ namespace Application.DTO.RequestDTO
 {
     public record RequestResponse(
         string organizationName,
+        bool mustCall,
+        string? shortDescription,
         string street,
         string city,
         string buildingNumber,
@@ -18,7 +20,10 @@ namespace Application.DTO.RequestDTO
         DateTime? preferredToTime)
     {
         public RequestResponse(Request request)
-            : this(request.Client?.OrganizationName,
+            : this(
+                  request.Client?.OrganizationName,
+                  request.MustCall,
+                  request.ShortDescription,
                   request.RequestAddress.City,
                   request.RequestAddress.Street,
                   request.RequestAddress.BuildingNumber,
