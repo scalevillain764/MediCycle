@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Client = Domain.Client;
 using Error = Domain.Enums.ErrorType;
 using ITokenService = Application.Interfaces.ITokenService;
+using ICurrnetUser = Application.Abstractions.ICurrentUser;
 using Worker = Domain.Worker;
 
 namespace Application.Services
@@ -19,12 +20,14 @@ namespace Application.Services
         private readonly AppDbContext _context;
         private readonly ITokenService _tokenService;
         private readonly IHttpContextAccessor _httpAccessor;
+        private readonly ICurrnetUser _currentUser;
 
-        public AuthService(AppDbContext context, ITokenService tokenService, IHttpContextAccessor httpAccessor)
+        public AuthService(AppDbContext context, ITokenService tokenService, IHttpContextAccessor httpAccessor, ICurrnetUser currnetUser)
         {
             _context = context;
             _tokenService = tokenService;
             _httpAccessor = httpAccessor;
+            _currentUser = currnetUser;
         }
 
         private string AppendCookiesAndGetAccessToken(User user)
@@ -93,6 +96,27 @@ namespace Application.Services
 
         public Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateClientAsync(AuthClientRegistrationDTO DTO, CancellationToken token)
             => RegistrateAsync(DTO, CreateClient, token);
+        public async Task<Result<AuthLoginResponse>> EditPasswordAsync(ChangePasswordDTO DTO, CancellationToken token)
+        {
+            var user = await _context.AllUsers
+                .FindAsync(_currentUser.UserId, token);
+
+            if (user == null)
+                return Result<AuthLoginResponse>.Error("Пользователь не найден", Error.Forbidden);
+
+            bool oldPasswordIsOk = BCrypt.Net.BCrypt.EnhancedVerify(user.PasswordHash, DTO.oldPassword);
+
+            if (!oldPasswordIsOk)
+                return Result<AuthLoginResponse>.Error("Старый пароль неправильный", Error.Validation);
+
+            user.PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(DTO.newPassword);
+
+            await _context.SaveChangesAsync(token);
+
+            string accessToken = AppendCookiesAndGetAccessToken(user);
+
+            return Result<AuthLoginResponse>.Success(new AuthLoginResponse(user.Id, accessToken));
+        }
 
         public async Task<Result<AuthLoginResponse>> LogInAsync(AuthLoginDTOandRegistrationResponse DTO, CancellationToken token)
         {

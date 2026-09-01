@@ -1,4 +1,4 @@
 ﻿namespace Application.DTO.AuthDTO
 {
-    public record AuthLoginResponse(Ulid UserId, string accessToken);
+    public record  AuthLoginResponse(Ulid UserId, string accessToken);
 }
