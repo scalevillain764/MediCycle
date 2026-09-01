@@ -1,10 +1,11 @@
-﻿using MediatR;
-using ICurrentUser = Application.Abstractions.ICurrentUser;
-using AddressResponse = Application.DTO.AddressDTO.AddressResponse;
-using Address = Domain.Address;
-using Infrastructure.Result;
+﻿using Application.DTO.RequestDTO;
 using Infrastructure;
+using Infrastructure.Result;
+using MediatR;
+using Address = Domain.Address;
+using AddressResponse = Application.DTO.AddressDTO.AddressResponse;
 using Error = Domain.Enums.ErrorType;
+using ICurrentUser = Application.Abstractions.ICurrentUser;
 namespace Application.Addresses
 {
     public class AddAddressCommandHandler : IRequestHandler<AddAddressCommand, Result<AddressResponse>>
@@ -19,8 +20,8 @@ namespace Application.Addresses
         public async Task<Result<AddressResponse>> Handle(AddAddressCommand command, CancellationToken token)
         {
             var company = await _context.Clients
-                .FindAsync(_currentUser.UserId);
-
+                .FindAsync(_currentUser.UserId, token);
+            
             if (company == null)
                 return Result<AddressResponse>.Error("Организация не найдена", Error.Conflict);
 

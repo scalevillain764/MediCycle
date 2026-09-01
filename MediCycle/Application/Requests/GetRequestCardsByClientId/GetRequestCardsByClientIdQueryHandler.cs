@@ -29,6 +29,8 @@ namespace Application.Requests
  
              var rez = await _context.Requests
                 .Where(x => x.ClientId == query.ClientId)
+                .Include(x => x.RequestAddress)
+                .Include(x => x.Client)
                 .Select(x => new RequestResponseCard(x))
                 .AsNoTracking()
                 .ToListAsync(token);

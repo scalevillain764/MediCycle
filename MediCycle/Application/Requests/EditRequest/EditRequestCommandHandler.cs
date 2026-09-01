@@ -4,6 +4,7 @@ using Infrastructure.Result;
 using MediatR;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Error = Domain.Enums.ErrorType;
+using Microsoft.EntityFrameworkCore;
 namespace Application.Requests
 {
     public class EditResponseCommandHandler : IRequestHandler<EditRequestCommand, Result<RequestResponse>>
@@ -26,6 +27,13 @@ namespace Application.Requests
             if (request.ClientId != _currentUser.UserId)
                 return Result<RequestResponse>.Error("Это не ваша заявка", Error.Forbidden);
 
+            var address = await _context.Addresses
+                .Where(x => x.ClientId == _currentUser.UserId)
+                .FirstOrDefaultAsync(x => x.Id == command.AddressId, token);
+
+            if (address == null)
+                return Result<RequestResponse>.Error("Такой адрес не найден", Error.NotFound);
+
             request.AddressId = command.AddressId;
             request.ShortDescription = command.ShortDescription;
             request.MustCall = command.MustCall;
@@ -34,6 +42,10 @@ namespace Application.Requests
             request.PreferredToTime = command.PreferredToTime;
 
             await _context.SaveChangesAsync(token);
+
+            await _context.Entry(request).Reference(x => x.RequestAddress).LoadAsync(token);
+            await _context.Entry(request).Reference(x => x.Client).LoadAsync(token);
+            await _context.Entry(request).Reference(x => x.Executor).LoadAsync(token);
 
             return Result<RequestResponse>.Success(new RequestResponse(request));
         }

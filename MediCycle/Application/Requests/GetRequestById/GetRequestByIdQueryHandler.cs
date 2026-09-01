@@ -21,6 +21,9 @@ namespace Application.Requests
         {
             var request = await _context.Requests
                 .AsNoTracking()
+                .Include(x => x.RequestAddress)
+                .Include(x => x.Client)
+                .Include(x => x.Executor)
                 .FirstOrDefaultAsync(x => x.Id == query.RequestId, token);
 
             if (request == null)

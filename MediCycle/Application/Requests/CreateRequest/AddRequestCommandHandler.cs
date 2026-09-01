@@ -18,10 +18,7 @@ namespace Application.Requests
             _currentUser = currentUser;
         }
         public async Task<Result<RequestResponse>> Handle(AddRequestCommand command, CancellationToken token)
-        {
-            if (_currentUser.UserId == null)
-                return Result<RequestResponse>.Error("Пользователь не авторизован", Error.Unauthorized);
-
+        {    
             var address = await _context.Addresses
                 .Where(x => x.ClientId == _currentUser.UserId)
                 .FirstOrDefaultAsync(x => x.Id == command.AddressId, token);
@@ -35,7 +32,16 @@ namespace Application.Requests
 
             await _context.SaveChangesAsync(token);
 
-            return Result<RequestResponse>.Success(new RequestResponse(request));
+            var request_rez = await _context.Requests
+                .Include(x => x.RequestAddress)
+                .Include(x => x.Client)
+                .Include(x => x.Executor)
+                .FirstOrDefaultAsync(x => x.Id == request.Id, token);
+
+            if (request_rez == null)
+                return Result<RequestResponse>.Error("Что-то пошло не так", Error.Conflict);
+
+            return Result<RequestResponse>.Success(new RequestResponse(request_rez));
         }
     }
 }

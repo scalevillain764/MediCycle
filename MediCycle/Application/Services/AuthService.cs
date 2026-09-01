@@ -107,6 +107,8 @@ namespace Application.Services
 
             string accessToken = AppendCookiesAndGetAccessToken(user);
 
+            await _context.SaveChangesAsync(token);
+
             return Result<AuthLoginResponse>.Success(new AuthLoginResponse(user.Id, accessToken));
         }
 

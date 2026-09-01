@@ -27,6 +27,9 @@ namespace Application.Addresses
             if (address == null)
                 return Result<AddressResponse>.Error("Адрес не найден", Error.NotFound);
 
+            if (_currentUser.UserId != address.ClientId)
+                return Result<AddressResponse>.Error("Вы не можете увидеть этот адрес", Error.Forbidden);
+
             return Result<AddressResponse>.Success(new AddressResponse(address));
         }
     }

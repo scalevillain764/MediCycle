@@ -23,9 +23,6 @@ namespace Application.Addresses
             if (address == null)
                 return Result<AddressResponse>.Error("Адрес не найден", Error.NotFound);
 
-            if (_currentUser.UserType != "Client")
-                return Result<AddressResponse>.Error("Вы не можете изменить этот адрес", Error.Conflict);
-
             if (address.ClientId != _currentUser.UserId)
                 return Result<AddressResponse>.Error("Это не ваш адрес", Error.Forbidden);
 

@@ -36,7 +36,7 @@ namespace Application.Requests
                 request.Status == Domain.Enums.RequestStatus.Completed)
                 return Result<string>.Error("Заявку отменить нельзя. Перезвоните, пожалуйста, водителю", Error.Conflict);
 
-            request.Status = Domain.Enums.RequestStatus.Cancelled;
+            _context.Requests.Remove(request);
 
             await _context.SaveChangesAsync(token);
 
