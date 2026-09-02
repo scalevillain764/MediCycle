@@ -30,7 +30,7 @@ namespace Application.Addresses
 
             _context.Addresses.Add(address);
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(token);
 
             return Result<AddressResponse>.Success(new AddressResponse(address));
         }
