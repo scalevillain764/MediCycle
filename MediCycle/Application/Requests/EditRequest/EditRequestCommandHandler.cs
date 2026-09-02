@@ -7,11 +7,11 @@ using Error = Domain.Enums.ErrorType;
 using Microsoft.EntityFrameworkCore;
 namespace Application.Requests
 {
-    public class EditResponseCommandHandler : IRequestHandler<EditRequestCommand, Result<RequestResponse>>
+    public class EditRequestCommandHandler : IRequestHandler<EditRequestCommand, Result<RequestResponse>>
     {
         private readonly AppDbContext _context;
         private readonly ICurrentUser _currentUser;
-        public EditResponseCommandHandler(AppDbContext context, ICurrentUser currentUser)
+        public EditRequestCommandHandler(AppDbContext context, ICurrentUser currentUser)
         {
             _context = context;
             _currentUser = currentUser;
