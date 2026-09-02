@@ -1,7 +1,8 @@
 ﻿using Domain;
 using MediatR;
 using Infrastructure.Responding;
-namespace Application.DTO.RequestDTO
+using Application.DTO.RequestDTO;
+namespace Application.Requests
 {
     public record AssignRequestCommand(Ulid requestId, Ulid executorId) : IRequest<Result<RequestResponse>>;
 }

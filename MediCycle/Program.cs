@@ -19,6 +19,15 @@ namespace MediCycle
                 app.UseHsts();
             }
 
+            builder.Services.AddAuthorization(options =>
+            {
+                // only clients
+                options.AddPolicy("ClientOnly", policy =>
+                    policy.RequireClaim("UserType", "Client"));
+                // clients & all except 
+            });
+
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

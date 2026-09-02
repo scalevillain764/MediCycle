@@ -29,7 +29,6 @@ namespace Application.Requests
             {
                 if (request.ClientId != _currentUser.UserId)
                     return Result<string>.Error("Это не ваша заявка", Error.Forbidden);
-
             }
        
             if (request.Status == Domain.Enums.RequestStatus.InProgress ||
