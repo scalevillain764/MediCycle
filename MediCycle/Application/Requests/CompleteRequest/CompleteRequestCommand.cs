@@ -1,4 +1,4 @@
-﻿using Infrastructure.Result;
+﻿using Infrastructure.Responding;
 using MediatR;
 using Application.DTO.RequestDTO;
 namespace Application.Requests

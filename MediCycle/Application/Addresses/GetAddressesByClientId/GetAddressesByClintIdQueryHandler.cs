@@ -2,7 +2,7 @@
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 using AddressResponse = Application.DTO.AddressDTO.AddressResponse;
 using Address = Domain.Address;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using Infrastructure;
 using Error = Domain.Enums.ErrorType;
 using System.Security.Cryptography.X509Certificates;

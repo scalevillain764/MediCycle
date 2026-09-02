@@ -1,6 +1,6 @@
 ﻿using Application.DTO.RequestDTO;
 using Infrastructure;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using MediatR;
 using Request = Domain.Request;
 using Error = Domain.Enums.ErrorType;

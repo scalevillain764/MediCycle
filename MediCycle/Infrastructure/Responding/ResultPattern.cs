@@ -1,5 +1,5 @@
 ﻿using ErrorType = Domain.Enums.ErrorType;
-namespace Infrastructure.Result
+namespace Infrastructure.Responding
 {
     public class Result<T> where T: class
     {

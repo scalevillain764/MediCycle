@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using Application.DTO.UserDTO;
 using Domain.Enums;
 namespace Application.Users

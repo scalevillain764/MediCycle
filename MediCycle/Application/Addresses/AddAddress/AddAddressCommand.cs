@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using Application.DTO.AddressDTO;
 namespace Application.Addresses
 {

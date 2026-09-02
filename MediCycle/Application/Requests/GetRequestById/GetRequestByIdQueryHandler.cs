@@ -1,5 +1,5 @@
 ﻿using Application.DTO.RequestDTO;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using MediatR;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Error = Domain.Enums.ErrorType;

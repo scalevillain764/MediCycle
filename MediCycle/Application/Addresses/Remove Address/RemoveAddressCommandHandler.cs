@@ -1,6 +1,6 @@
 ﻿using Domain;
 using Infrastructure;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using MediatR;
 using Address = Domain.Address;
 using AddressResponse = Application.DTO.AddressDTO.AddressResponse;

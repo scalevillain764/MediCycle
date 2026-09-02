@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using Infrastructure;
 using Error = Domain.Enums.ErrorType;
 namespace Application.Requests

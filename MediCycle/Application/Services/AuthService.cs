@@ -5,7 +5,7 @@ using Application.Interfaces;
 using Domain;
 using Domain.Enums;
 using Infrastructure;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using Microsoft.EntityFrameworkCore;
 using Client = Domain.Client;
 using Error = Domain.Enums.ErrorType;

@@ -1,6 +1,6 @@
 ﻿using Application.DTO.RequestDTO;
 using Infrastructure;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using MediatR;
 using Domain;
 using Request = Domain.Request;

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Application.DTO.UserDTO;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
-using Infrastructure.Result;
+using Infrastructure.Responding;
 using Infrastructure;
 using Domain;
 using Microsoft.EntityFrameworkCore;
