@@ -50,8 +50,34 @@ namespace Presentation.Controllers
         [HttpPatch("{requestId}/edit")]
         [Authorize(Policy = "ClientOnly")]
         public async Task<IActionResult> EditRequestAsync([FromRoute] Ulid requestId, [FromBody] EditRequestCommand command, CancellationToken token)
-            => ProcessResult(await _mediator.Send(command with {RequestId = requestId}, token));
+            => ProcessResult(await _mediator.Send(command with { RequestId = requestId }, token));
 
-        // add get methods
+        [HttpGet("{requestId}")]
+        [Authorize]
+        public async Task<IActionResult> GetRequestByIdAsync([FromRoute] Ulid requestId, CancellationToken token)
+            => ProcessResult(await _mediator.Send(new GetRequestByIdQuery(requestId), token));
+
+        [HttpGet("client/{clientId}")]
+        [Authorize(Roles = "Admin, Dispatcher, Driver")]
+        public async Task<IActionResult> GetUserRequestsAsync([FromRoute] Ulid clientId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            CancellationToken token)
+            => ProcessResult(await _mediator.Send(new GetRequestCardsByClientIdQuery(clientId, page, pageSize), token));
+
+        [HttpGet("my")]
+        [Authorize(Policy = "ClientOnly")]
+        public async Task<IActionResult> GetMyRequestsAsync([FromQuery] int page, 
+            [FromQuery] int pageSize,
+            CancellationToken token)
+            => ProcessResult(await _mediator.Send(new GetRequestCardsByClientIdQuery(CurrentUserId, page, pageSize), token));
+
+        [HttpGet("executor/{executorId}")]
+        [Authorize(Roles = "Driver, Dispatcher, Admin")]
+        public async Task<IActionResult> GetWorkerRequestAsync([FromQuery] Ulid executorId,
+            [FromQuery] int page,
+            [FromQuery] int pageSize,
+            CancellationToken token)
+            => ProcessResult(await _mediator.Send(new GetRequestCardsByExecutorIdQuery(executorId, page, pageSize), token));
     }
 }
