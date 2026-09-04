@@ -71,7 +71,7 @@ namespace Application.Services
         private Client CreateClient(AuthClientRegistrationDTO DTO, string hashedPassword)
             => new Client(DTO.organization_name, DTO.login, hashedPassword);
 
-        private async Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateAsync<TRequest, TEntity>(TRequest DTO, Func<TRequest, string, TEntity> create, CancellationToken token) 
+        private async Task<Result<AuthLoginDTOandRegistrationResponse>> RegisterAsync<TRequest, TEntity>(TRequest DTO, Func<TRequest, string, TEntity> create, CancellationToken token) 
             where TEntity : Domain.User
             where TRequest : UniversalRegistrationDTO
         {
@@ -91,11 +91,11 @@ namespace Application.Services
 
             return Result<AuthLoginDTOandRegistrationResponse>.Success(new AuthLoginDTOandRegistrationResponse(user.Login, DTO.password));
         }
-        public Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateWorkerAsync(AuthWorkerRegistrationDTO DTO, CancellationToken token)
-            => RegistrateAsync(DTO, CreateWorker, token);
+        public Task<Result<AuthLoginDTOandRegistrationResponse>> RegisterWorkerAsync(AuthWorkerRegistrationDTO DTO, CancellationToken token)
+            => RegisterAsync(DTO, CreateWorker, token);
 
-        public Task<Result<AuthLoginDTOandRegistrationResponse>> RegistrateClientAsync(AuthClientRegistrationDTO DTO, CancellationToken token)
-            => RegistrateAsync(DTO, CreateClient, token);
+        public Task<Result<AuthLoginDTOandRegistrationResponse>> RegisterClientAsync(AuthClientRegistrationDTO DTO, CancellationToken token)
+            => RegisterAsync(DTO, CreateClient, token);
         public async Task<Result<AuthLoginResponse>> EditPasswordAsync(ChangePasswordDTO DTO, CancellationToken token)
         {
             var user = await _context.AllUsers

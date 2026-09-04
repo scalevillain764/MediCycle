@@ -5,6 +5,7 @@ using Infrastructure;
 using Error = Domain.Enums.ErrorType;
 using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 namespace Application.Requests
 {
     public class GetRequestCardsByExecutorIdQueryHandler : IRequestHandler<GetRequestCardsByExecutorIdQuery, Result<PagedResponse<RequestResponseCard>>>

@@ -16,15 +16,15 @@ namespace Presentation.Controllers
             _service = authService;
         }
 
-        [HttpPost("registrate_worker")]
+        [HttpPost("register_worker")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> CreateWorkerAsync([FromBody] AuthWorkerRegistrationDTO DTO, CancellationToken token)
-            => ProcessResult(await _service.RegistrateWorkerAsync(DTO, token));
+        public async Task<IActionResult> RegisterWorkerAsync([FromBody] AuthWorkerRegistrationDTO DTO, CancellationToken token)
+            => ProcessResult(await _service.RegisterWorkerAsync(DTO, token));
 
-        [HttpPost("registrate_client")]
+        [HttpPost("register_client")]
         [AllowAnonymous]
-        public async Task<IActionResult> RegistrateWorkerAsync([FromBody] AuthClientRegistrationDTO DTO, CancellationToken token)
-            => ProcessResult(await _service.RegistrateClientAsync(DTO, token));
+        public async Task<IActionResult> RegisterWorkerAsync([FromBody] AuthClientRegistrationDTO DTO, CancellationToken token)
+            => ProcessResult(await _service.RegisterClientAsync(DTO, token));
 
         [HttpPost("login")]
         [AllowAnonymous]

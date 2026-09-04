@@ -17,14 +17,14 @@
         
         public ICollection<Request> Requests { get; set; } = [];
 
-        public Address (Ulid clientId, string city, string street, string buldingNumber, string presentativeName,
+        public Address (Ulid clientId, string city, string street, string buildingNumber, string presentativeName,
             string presentativeSurname, string presentativePhone)
         {
             Id = Ulid.NewUlid();
             ClientId = clientId;
             City = city;
             Street = street;
-            BuildingNumber = buldingNumber;
+            BuildingNumber = buildingNumber;
             PresentativeName = presentativeName;
             PresentativeSurname = presentativeSurname;
             PresentativePhone = presentativePhone;
