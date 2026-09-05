@@ -4,6 +4,7 @@ using ICurrentUser = Application.Abstractions.ICurrentUser;
 using Infrastructure.Responding;
 using Infrastructure;
 using Domain;
+using StackExchange.Redis;
 using Microsoft.EntityFrameworkCore;
 namespace Application.Users
 {
@@ -11,10 +12,12 @@ namespace Application.Users
     {
         private readonly AppDbContext _context;
         private readonly ICurrentUser _currentUser;
-        public EditUserCommandHandler(AppDbContext context, ICurrentUser currentUser)
+        private readonly IDatabase _redis;
+        public EditUserCommandHandler(AppDbContext context, ICurrentUser currentUser, IConnectionMultiplexer redis)
         {
             _context = context;
             _currentUser = currentUser;
+            _redis = redis.GetDatabase();
         }
         public async Task<Result<UserResponse>> Handle(EditUserCommand command, CancellationToken token)
         {
@@ -42,6 +45,7 @@ namespace Application.Users
             }
 
             await _context.SaveChangesAsync(token);
+            await _redis.KeyDeleteAsync($"user:{_currentUser.UserId}");
 
             if (user is Worker worker)
                 return Result<UserResponse>.Success(new WorkerResponse(worker));
